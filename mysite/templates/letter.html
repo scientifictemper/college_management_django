@@ -1,0 +1,34 @@
+{% extends 'index.html' %}
+{% block content %}
+    <div class="container">
+        From:<br>
+        <br>
+        &emsp;&emsp;{{data.name}},<br>
+        &emsp;&emsp;{{data.department}},<br>
+        &emsp;&emsp;Mailam Enginering College,<br>
+        &emsp;&emsp;Mailam.<br>
+        <br>
+        <br>
+        To:<br>
+        <br>
+        &emsp;&emsp;The principal,<br>
+        &emsp;&emsp;Mailam Enginering College,<br>
+        &emsp;&emsp;Mailam.<br>
+        <br>
+        <br>
+        Respected Sir,<br>
+        <br>
+        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;subject:{{data.subject}}-Reg<br>
+        <br>
+        &emsp;&emsp;&emsp;I am {{data.name}} studying {{data.address}} at our institute
+        due to {{data.reason}},So I want {{data.subject}}<br>
+        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Thank you<br>
+        <br>
+        {{data.date}}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;your's faithufully,<br>
+        Mailam&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;{{data.name}}
+
+     </div>
+{% endblock %}

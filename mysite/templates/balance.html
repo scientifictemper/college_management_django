@@ -1,0 +1,34 @@
+{% extends 'index.html' %}
+{% block content %}
+{% load static %}
+<div class="container">
+  <div class="card" style="width: 18rem;">
+    <img class="card-img-top" src="{% static 'images/mec.png' %}" alt="Card image cap">
+    <div class="card-body">
+      <h5>NAME:{{data.name}}</h5>
+      <h5>ENROLL:{{data.rollno}}</h5>
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Total Fees</th>
+            <th scope="col">Paid</th>
+            <th scope="col">Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>1,25,000 Rupees</td>
+            <td>1,00,000 Rupees</td>
+            <td>25,000</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
