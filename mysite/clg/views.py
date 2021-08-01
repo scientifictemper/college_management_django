@@ -1,39 +1,54 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.forms import UserCreationForm
-from .forms import RegistrationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from clg.forms import PermissionForm,PaymentForm
-from .models import Permission,Payment
 from django.http import FileResponse
+from django.views.generic import View
+
 import os
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+
+from .decorators import unauthenticated_user, allowed_users, admin_only
+from .models import Permission,Payment
+from .forms import RegistrationForm
+
 
 
 # Create your views here.
 def index(request):
     return render(request,'index.html')
 
+@login_required(login_url='login')
+
 def home(request):
-	
-    return render(request,'home.html')
+
+	return render(request,'home.html')
+
+@unauthenticated_user
 def registerPage(request):
-	if request.user.is_authenticated:
-		return redirect('home')
-	else:
-		form = RegistrationForm()
-		if request.method == 'POST':
-			form = RegistrationForm(request.POST)
-			if form.is_valid():
-				form.save()
-				user = form.cleaned_data.get('username')
-				messages.success(request, 'Account was created for ' + user)
+	form = RegistrationForm()
+	if request.method == 'POST':
+		form = RegistrationForm(request.POST)
+		if form.is_valid():
+			user = form.save()
+			username = form.cleaned_data.get('username')
 
-				return redirect('login')
-			
+			group = Group.objects.get(name='students')
+			user.groups.add(group)
 
-		context = {'form':form}
-		return render(request, 'signup.html', context)  
+			messages.success(request, 'Account was created for ' + username)
 
+			return redirect('login')
+		
+
+	context = {'form':form}
+	return render(request, 'signup.html', context)
+
+
+@unauthenticated_user
 def loginPage(request):
 	if request.user.is_authenticated:
 		return redirect('home')
@@ -84,7 +99,7 @@ def permission(request):
 		form=PermissionForm(request.POST)
 		if form.is_valid():
 			form.save()
-			return redirect('viewpay')
+		return redirect('viewper')
 	    
 	else:
 		form=PermissionForm()				
@@ -92,10 +107,44 @@ def permission(request):
 		'form':form
 	}
 	return render(request,'permission.html',context)
-def viewpermission(request):
-	obj=Permission.objects.all()
-	return render(request,'viewper.html',{'data':obj})
 
+class PermissionListView(View):
+	def get(self,*args,**kwargs):
+		permissions=Permission.objects.all()
+		context={
+			"permissions":permissions,
+		}
+		return render(self.request,'viewper.html',context)
+	def post(self,request):
+		permission_ids=request.POST.getlist("i.id")
+		permission_ids=list(map(int,permission_ids))
+
+		update_status_for_permission=int(request.POST['status'])
+		permissions=Permission.objects.filter(id__in=permission_ids)
+		if update_status_for_permission == 0:
+			permissions.update(status=False)
+		else:
+			permissions.update(status=True)
+		return redirect('viewper')				
+
+def  givePermission(request,id):
+	obj=Permission.objects.get(id=id)
+	if request.method=='POST':
+		obj=Permission.objects.get(id=id)
+		form=PermissionForm(request.POST,instance=obj)
+		if form.is_valid():
+			obj.name=form.cleaned_data['name']
+			obj.save()
+			form.save()
+			return redirect('viewper')
+	    
+	else:
+		form=PermissionForm(instance=obj)				
+	context={
+		'form':form,
+		'obj':obj,
+	}
+	return render(request,'giveper.html',context)
 def viewpayment(request):
 	obj=Payment.objects.all()
 	return render(request,'viewpay.html',{'data':obj})
@@ -130,3 +179,4 @@ def timetable(request):
 def cse_pdf(requset):
 	filepath = os.path.join('static', 'cse.pdf')
 	return FileResponse(open(filepath, 'rb'), content_type='application/pdf')
+

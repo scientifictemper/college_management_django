@@ -4,7 +4,13 @@
     {% csrf_token%}
     {% load materializecss %}
     <div class="container">
-        {{ form|materializecss }}
+        {{ form.name|materializecss }}
+        {{ form.department|materializecss }}
+        {{ form.subject|materializecss }}
+        {{ form.date|materializecss }}
+        {{ form.reason|materializecss }}
+
+
         <input type="submit" class="btn btn-primary btn-lg btn-block" value="submit">
     </div>
     

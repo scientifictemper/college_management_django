@@ -10,7 +10,12 @@
             <div class="card-body">
               <h5 class="card-title">Permission</h5>
               <p class="card-text">First click get permission button and then click view and view your permission letter details.</p>
+              {% if not request.user.is_staff %}
+
               <a href="{% url 'permission' %}" class="btn btn-primary">Get permission</a>
+              
+              {% endif %}
+
               <a href="{% url 'viewper' %}" class="btn btn-primary">View</a>
 
 

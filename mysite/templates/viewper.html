@@ -4,29 +4,36 @@
     <table class="table">
         <thead>
           <tr>
-            <th scope="col">#</th>
+            <th scope="col">S.No</th>
             <th scope="col">Name</th>
             <th scope="col">Department</th>
             <th scope="col">Subject</th>
             <th scope="col">Date</th>
-           
+            <th scope="col">View Letter</th>
+            <th scope="col">Status</th>
           </tr>
         </thead>
         <tbody>
-          {% for i in data %}
+          {% for i in permissions %}
           <tr>
-            <th scope="row">1</th>
+            <td>{{i.id}}</td>
             <td>{{i.name}}</td>
             <td>{{i.department}}</td>
             <td>{{i.subject}}</td>
             <td>{{i.date}}</td>
             <td><a href="{% url 'letter' i.id %}" class="btn btn-primary">View Letter</a></td>
-            <td><a href="#" class="btn btn-primary">SEND</a></td>
-
-          </tr>
+            <td class="level-right">
+              {% if i.get_status %}
+              <a class="button is-small is-success" href="#">Approved</a>
+              {% else %}
+              <a class="button is-small is-warning" href="#">Not Approved</a>
+              {% endif %}
+          </td>
+          
           {% endfor %}
 
         </tbody>
       </table>
+      
 </div>
 {% endblock %}
